@@ -17,18 +17,29 @@ function renderDocument(doc) {
   let title = document.createElement("span");
   title.textContent = doc.data().title;
 
+  let cross = document.createElement("div");
+  cross.textContent = "X";
+
   li.appendChild(checkbox);
   li.appendChild(title);
+  li.appendChild(cross);
 
-  return li;
+  list.appendChild(li);
+
+  cross.addEventListener("click", event => {
+    event.stopPropagation();
+    let id = event.target.parentElement.getAttribute("data-id");
+    console.log("id", id);
+    db.collection("todo")
+      .doc(id)
+      .delete();
+  });
 }
 
 db.collection("todo")
   .get()
   .then(response => {
-    const items = [];
-    response.docs.forEach(doc => items.push(renderDocument(doc)));
-    items.map(item => list.appendChild(item));
+    response.docs.forEach(doc => renderDocument(doc));
   });
 
 form.addEventListener("submit", event => {
