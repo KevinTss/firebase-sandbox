@@ -1,4 +1,5 @@
 const list = document.querySelector("#todo-list");
+const form = document.querySelector("#add-todo-form");
 
 function renderDocument(doc) {
   let li = document.createElement("li");
@@ -29,3 +30,9 @@ db.collection("todo")
     response.docs.forEach(doc => items.push(renderDocument(doc)));
     items.map(item => list.appendChild(item));
   });
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  db.collection("todo").add({ is_done: false, title: form.title.value });
+  form.title.value = "";
+});
